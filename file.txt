@@ -96,3 +96,355 @@ Query OK, 1 row affected (0.02 sec)
 mysql> select Name from Genre where GenreId = 27;
 Empty set (0.00 sec)
 
+mysql> select * Album limit 5;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Album limit 5' at line 1
+mysql> select * from  Album limit 5;
++---------+---------------------------------------+----------+
+| AlbumId | Title                                 | ArtistId |
++---------+---------------------------------------+----------+
+|       1 | For Those About To Rock We Salute You |        1 |
+|       2 | Balls to the Wall                     |        2 |
+|       3 | Restless and Wild                     |        2 |
+|       4 | Let There Be Rock                     |        1 |
+|       5 | Big Ones                              |        3 |
++---------+---------------------------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select Title, Name from Album limit 5;
+ERROR 1054 (42S22): Unknown column 'Name' in 'field list'
+mysql> select * from Artist limit 5;
++----------+-------------------+
+| ArtistId | Name              |
++----------+-------------------+
+|        1 | AC/DC             |
+|        2 | Accept            |
+|        3 | Aerosmith         |
+|        4 | Alanis Morissette |
+|        5 | Alice In Chains   |
++----------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> select Title, Name from Album
+    -> join Artist on Album.ArtistId = Artist.ArtistId
+    -> limit 5;
++---------------------------------------+-----------+
+| Title                                 | Name      |
++---------------------------------------+-----------+
+| For Those About To Rock We Salute You | AC/DC     |
+| Balls to the Wall                     | Accept    |
+| Restless and Wild                     | Accept    |
+| Let There Be Rock                     | AC/DC     |
+| Big Ones                              | Aerosmith |
++---------------------------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Album
+    -> join Artist on Album.ArtistId = Artist.ArtistId
+    -> limit 5;
++---------+---------------------------------------+----------+----------+-----------+
+| AlbumId | Title                                 | ArtistId | ArtistId | Name      |
++---------+---------------------------------------+----------+----------+-----------+
+|       1 | For Those About To Rock We Salute You |        1 |        1 | AC/DC     |
+|       2 | Balls to the Wall                     |        2 |        2 | Accept    |
+|       3 | Restless and Wild                     |        2 |        2 | Accept    |
+|       4 | Let There Be Rock                     |        1 |        1 | AC/DC     |
+|       5 | Big Ones                              |        3 |        3 | Aerosmith |
++---------+---------------------------------------+----------+----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select Title, Name from Album
+    -> join Artist on Album.ArtistId = Artist.ArtistId
+    -> limit 5;
++---------------------------------------+-----------+
+| Title                                 | Name      |
++---------------------------------------+-----------+
+| For Those About To Rock We Salute You | AC/DC     |
+| Balls to the Wall                     | Accept    |
+| Restless and Wild                     | Accept    |
+| Let There Be Rock                     | AC/DC     |
+| Big Ones                              | Aerosmith |
++---------------------------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select Title, Name from Album inner join Artist on Album.ArtistId = Artist.ArtistId limit 5;
++---------------------------------------+-----------+
+| Title                                 | Name      |
++---------------------------------------+-----------+
+| For Those About To Rock We Salute You | AC/DC     |
+| Balls to the Wall                     | Accept    |
+| Restless and Wild                     | Accept    |
+| Let There Be Rock                     | AC/DC     |
+| Big Ones                              | Aerosmith |
++---------------------------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Track limit 5;
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+| TrackId | Name                                    | AlbumId | MediaTypeId | GenreId | Composer                                                               | Milliseconds | Bytes    | UnitPrice |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+|       1 | For Those About To Rock (We Salute You) |       1 |           1 |       1 | Angus Young, Malcolm Young, Brian Johnson                              |       343719 | 11170334 |      0.99 |
+|       2 | Balls to the Wall                       |       2 |           2 |       1 | NULL                                                                   |       342562 |  5510424 |      0.99 |
+|       3 | Fast As a Shark                         |       3 |           2 |       1 | F. Baltes, S. Kaufman, U. Dirkscneider & W. Hoffman                    |       230619 |  3990994 |      0.99 |
+|       4 | Restless and Wild                       |       3 |           2 |       1 | F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. Dirkscneider & W. Hoffman |       252051 |  4331779 |      0.99 |
+|       5 | Princess of the Dawn                    |       3 |           2 |       1 | Deaffy & R.A. Smith-Diesel                                             |       375418 |  6290521 |      0.99 |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select Name, Title, ArtistId from Track
+    -> join Album on Track.AlbumId = Album.AlbumId
+    -> limit 5;
++-----------------------------------------+---------------------------------------+----------+
+| Name                                    | Title                                 | ArtistId |
++-----------------------------------------+---------------------------------------+----------+
+| For Those About To Rock (We Salute You) | For Those About To Rock We Salute You |        1 |
+| Balls to the Wall                       | Balls to the Wall                     |        2 |
+| Fast As a Shark                         | Restless and Wild                     |        2 |
+| Restless and Wild                       | Restless and Wild                     |        2 |
+| Princess of the Dawn                    | Restless and Wild                     |        2 |
++-----------------------------------------+---------------------------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select Name, Title, ArtistId from Album
+    -> join Track on Album.Id = Track.AlbumId
+    -> limit 5;
+ERROR 1054 (42S22): Unknown column 'Album.Id' in 'on clause'
+mysql> select Name, Title, ArtistId from Album join Track on Album.AlbumId = Track.AlbumId limit 5;
++-----------------------------------------+---------------------------------------+----------+
+| Name                                    | Title                                 | ArtistId |
++-----------------------------------------+---------------------------------------+----------+
+| For Those About To Rock (We Salute You) | For Those About To Rock We Salute You |        1 |
+| Balls to the Wall                       | Balls to the Wall                     |        2 |
+| Fast As a Shark                         | Restless and Wild                     |        2 |
+| Restless and Wild                       | Restless and Wild                     |        2 |
+| Princess of the Dawn                    | Restless and Wild                     |        2 |
++-----------------------------------------+---------------------------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select Name as Track, Title as Album, ArtistId from Track
+    -> join Artist on Track.ArtistId = Artist.ArtistId
+    -> limit 5;
+ERROR 1052 (23000): Column 'Name' in field list is ambiguous
+mysql> select Name as Track, Title as Album, ArtistId from Track join Album on Track.AlbumId = Album.AlbumId limit 5;
++-----------------------------------------+---------------------------------------+----------+
+| Track                                   | Album                                 | ArtistId |
++-----------------------------------------+---------------------------------------+----------+
+| For Those About To Rock (We Salute You) | For Those About To Rock We Salute You |        1 |
+| Balls to the Wall                       | Balls to the Wall                     |        2 |
+| Fast As a Shark                         | Restless and Wild                     |        2 |
+| Restless and Wild                       | Restless and Wild                     |        2 |
+| Princess of the Dawn                    | Restless and Wild                     |        2 |
++-----------------------------------------+---------------------------------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select Name as Track, Title as Album, ArtistId, Name as Artist from Track
+    -> join Album on Track.AlbumId = Album.AlbumId
+    -> join Artist on Album.ArtistId = Artist.ArtistId;
+ERROR 1052 (23000): Column 'Name' in field list is ambiguous
+mysql> select Track.Name as Track, Title as Album, Album.ArtistId, Artist.Name as Artist from Track join Album on Track.AlbumId = Album.AlbumId join Artist on Album.ArtistId = Artist.ArtistId limit 5;
++-----------------------------------------+---------------------------------------+----------+--------+
+| Track                                   | Album                                 | ArtistId | Artist |
++-----------------------------------------+---------------------------------------+----------+--------+
+| For Those About To Rock (We Salute You) | For Those About To Rock We Salute You |        1 | AC/DC  |
+| Put The Finger On You                   | For Those About To Rock We Salute You |        1 | AC/DC  |
+| Let's Get It Up                         | For Those About To Rock We Salute You |        1 | AC/DC  |
+| Inject The Venom                        | For Those About To Rock We Salute You |        1 | AC/DC  |
+| Snowballed                              | For Those About To Rock We Salute You |        1 | AC/DC  |
++-----------------------------------------+---------------------------------------+----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name as Track, Title as Album, Artist.Name as Artist from Track join Album on Track.AlbumId = Album.AlbumId join Artist on Album.ArtistId = Artist.ArtistId where Artist.Name = "U2" limit 5;
++-----------------------------------+--------------+--------+
+| Track                             | Album        | Artist |
++-----------------------------------+--------------+--------+
+| Zoo Station                       | Achtung Baby | U2     |
+| Even Better Than The Real Thing   | Achtung Baby | U2     |
+| One                               | Achtung Baby | U2     |
+| Until The End Of The World        | Achtung Baby | U2     |
+| Who's Gonna Ride Your Wild Horses | Achtung Baby | U2     |
++-----------------------------------+--------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name, MediaType.Name from Track
+    -> join MediaType on Track.MediaTypeId = MediaType.MediaTypeId
+    -> limit 5;
++-----------------------------------------+-----------------+
+| Name                                    | Name            |
++-----------------------------------------+-----------------+
+| For Those About To Rock (We Salute You) | MPEG audio file |
+| Put The Finger On You                   | MPEG audio file |
+| Let's Get It Up                         | MPEG audio file |
+| Inject The Venom                        | MPEG audio file |
+| Snowballed                              | MPEG audio file |
++-----------------------------------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Genre limit 5;
++---------+--------------------+
+| GenreId | Name               |
++---------+--------------------+
+|       1 | Rock               |
+|       2 | Jazz               |
+|       3 | Metal              |
+|       4 | Alternative & Punk |
+|       5 | Rock And Roll      |
++---------+--------------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Track limit 5;
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+| TrackId | Name                                    | AlbumId | MediaTypeId | GenreId | Composer                                                               | Milliseconds | Bytes    | UnitPrice |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+|       1 | For Those About To Rock (We Salute You) |       1 |           1 |       1 | Angus Young, Malcolm Young, Brian Johnson                              |       343719 | 11170334 |      0.99 |
+|       2 | Balls to the Wall                       |       2 |           2 |       1 | NULL                                                                   |       342562 |  5510424 |      0.99 |
+|       3 | Fast As a Shark                         |       3 |           2 |       1 | F. Baltes, S. Kaufman, U. Dirkscneider & W. Hoffman                    |       230619 |  3990994 |      0.99 |
+|       4 | Restless and Wild                       |       3 |           2 |       1 | F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. Dirkscneider & W. Hoffman |       252051 |  4331779 |      0.99 |
+|       5 | Princess of the Dawn                    |       3 |           2 |       1 | Deaffy & R.A. Smith-Diesel                                             |       375418 |  6290521 |      0.99 |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name, Genre.Name from Track
+    -> join Genre on Track.GenreId = Genre.GenreId 
+    -> limit 5;
++-----------------------------------------+------+
+| Name                                    | Name |
++-----------------------------------------+------+
+| For Those About To Rock (We Salute You) | Rock |
+| Balls to the Wall                       | Rock |
+| Fast As a Shark                         | Rock |
+| Restless and Wild                       | Rock |
+| Princess of the Dawn                    | Rock |
++-----------------------------------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name, Genre.Name as Genre from Track join Genre on Track.GenreId = Genre.GenreId  limit 5;
++-----------------------------------------+-------+
+| Name                                    | Genre |
++-----------------------------------------+-------+
+| For Those About To Rock (We Salute You) | Rock  |
+| Balls to the Wall                       | Rock  |
+| Fast As a Shark                         | Rock  |
+| Restless and Wild                       | Rock  |
+| Princess of the Dawn                    | Rock  |
++-----------------------------------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name as Track, Genre.Name as Genre from Track join Genre on Track.GenreId = Genre.GenreId  limit 5;
++-----------------------------------------+-------+
+| Track                                   | Genre |
++-----------------------------------------+-------+
+| For Those About To Rock (We Salute You) | Rock  |
+| Balls to the Wall                       | Rock  |
+| Fast As a Shark                         | Rock  |
+| Restless and Wild                       | Rock  |
+| Princess of the Dawn                    | Rock  |
++-----------------------------------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name as Track, Genre.Name as Genre from Track join Genre on Track.GenreId = Genre.GenreId where Genre.Name = 'Jazz' limit 5;
++----------------------------------------+-------+
+| Track                                  | Genre |
++----------------------------------------+-------+
+| Desafinado                             | Jazz  |
+| Garota De Ipanema                      | Jazz  |
+| Samba De Uma Nota Só (One Note Samba)  | Jazz  |
+| Por Causa De Você                      | Jazz  |
+| Ligia                                  | Jazz  |
++----------------------------------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name as Track, MediaType.Name as MediaType, Genre.Name as Genre join Track
+    -> quit;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'join Track
+quit' at line 1
+mysql> select Track.Name as Track, MediaType.Name as MediaType, Genre.Name as Genre from Track
+    -> join Mediatype on 
+    -> quit;
+ERROR 1146 (42S02): Table 'Chinook.Mediatype' doesn't exist
+mysql> select * from MediaType limit 5;
++-------------+-----------------------------+
+| MediaTypeId | Name                        |
++-------------+-----------------------------+
+|           1 | MPEG audio file             |
+|           2 | Protected AAC audio file    |
+|           3 | Protected MPEG-4 video file |
+|           4 | Purchased AAC audio file    |
+|           5 | AAC audio file              |
++-------------+-----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.Name as Track, MediaType.Name as MediaType, Genre.Name as Genre from Track
+    -> join MediaType on Track.MediaTypeId = MediaType.MediaTypeId
+    -> join Genre on Track.GenreId = Genre.GenreId
+    -> where Mediatype.Name = 'Protected AAC audio file', Genre.Name = 'Soundtrack';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', Genre.Name = 'Soundtrack'' at line 4
+mysql> select Track.Name as Track, MediaType.Name as MediaType, Genre.Name as Genre from Track join MediaType on Track.MediaTypeId = MediaType.MediaTypeId join Genre on Track.GenreId = Genre.GenreId where Mediatype.Name = 'Protected AAC audio file'and Genre.Name = 'Soundtrack';
+ERROR 1054 (42S22): Unknown column 'Mediatype.Name' in 'where clause'
+mysql> select Track.Name as Track, MediaType.Name as MediaType, Genre.Name as Genre from Track join MediaType on Track.MediaTypeId = MediaType.MediaTypeId join Genre on Track.GenreId = Genre.GenreId where MediaType.Name = 'Protected AAC audio file'and Genre.Name = 'Soundtrack';
++---------------+--------------------------+------------+
+| Track         | MediaType                | Genre      |
++---------------+--------------------------+------------+
+| Koyaanisqatsi | Protected AAC audio file | Soundtrack |
++---------------+--------------------------+------------+
+1 row in set (0.01 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_Chinook |
++-------------------+
+| Album             |
+| Artist            |
+| Customer          |
+| Employee          |
+| Genre             |
+| Invoice           |
+| InvoiceLine       |
+| MediaType         |
+| Playlist          |
+| PlaylistTrack     |
+| Track             |
++-------------------+
+11 rows in set (0.01 sec)
+
+mysql> select * from Playlist limit 5;
++------------+--------------+
+| PlaylistId | Name         |
++------------+--------------+
+|          1 | Music        |
+|          2 | Movies       |
+|          3 | TV Shows     |
+|          4 | Audiobooks   |
+|          5 | 90’s Music   |
++------------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Track limit 5;
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+| TrackId | Name                                    | AlbumId | MediaTypeId | GenreId | Composer                                                               | Milliseconds | Bytes    | UnitPrice |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+|       1 | For Those About To Rock (We Salute You) |       1 |           1 |       1 | Angus Young, Malcolm Young, Brian Johnson                              |       343719 | 11170334 |      0.99 |
+|       2 | Balls to the Wall                       |       2 |           2 |       1 | NULL                                                                   |       342562 |  5510424 |      0.99 |
+|       3 | Fast As a Shark                         |       3 |           2 |       1 | F. Baltes, S. Kaufman, U. Dirkscneider & W. Hoffman                    |       230619 |  3990994 |      0.99 |
+|       4 | Restless and Wild                       |       3 |           2 |       1 | F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. Dirkscneider & W. Hoffman |       252051 |  4331779 |      0.99 |
+|       5 | Princess of the Dawn                    |       3 |           2 |       1 | Deaffy & R.A. Smith-Diesel                                             |       375418 |  6290521 |      0.99 |
++---------+-----------------------------------------+---------+-------------+---------+------------------------------------------------------------------------+--------------+----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select Track.GenreId as Genre, Track.Name as Track, Album.Title, Artist.Name as Artist from Track 
+    -> join Album on Track.AlbumId = Album.AlbumId
+    -> join Artist on Album.ArtistId = Artist.ArtistId
+    -> join Genre on Track.GenreId = Genre.GenreId
+    -> where Genre.Name = 'Grudge';
+Empty set (0.00 sec)
+
+mysql> select Track.GenreId as Genre, Track.Name as Track, Album.Title, Artist.Name as Artist from Track  join Album on Track.AlbumId = Album.AlbumId join Artist on Album.ArtistId = Artist.ArtistId join Genre on Track.GenreId = Genre.GenreId where Genre.Name = 'Grunge';
+Empty set (0.00 sec)
+
+mysql> select Track.GenreId as Genre, Track.Name as Track, Album.Title, Artist.Name as Artist limit 5;
+ERROR 1109 (42S02): Unknown table 'Track' in field list
+mysql> select Track.GenreId as Genre, Track.Name as Track limit 5;
+ERROR 1109 (42S02): Unknown table 'Track' in field list
+mysql> notetee
+    -> quit;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'notetee
+quit' at line 1
+mysql> notee;
